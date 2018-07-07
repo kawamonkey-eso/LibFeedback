@@ -1,5 +1,27 @@
+-- Modified by Dolgubon based off code from Master Merchant with permission
+-- Master Merchant was written by Dan Stone (aka @khaibit) / Chris Lasswell (aka @Philgo68)
 
--- Example:  LibFeedback:initializeFeedbackWindow(DolgubonSetCrafter, "Dolgubon's Lazy Set Crafter", "@Dolgubon", {TOPLEFT , owningWindow , TOPLEFT , 10, 10}, {0,5000,50000, "https://www.genericexampleurl.com/somemoregenericiness"})
+--[[
+
+Use:
+
+local LibFeedback = LibStub:GetLibrary('LibFeedback')
+LibFeedback:initializeFeedbackWindow(ExampleAddonNameSpace, -- namespace of the addon
+"Example Addon", -- The title string for the feedback window and the mails it sends
+"@AddonAuthor", -- The destination for feedback (0 gold attachment) and donation mails
+{TOPLEFT , owningWindow , TOPLEFT , 10, 10}, -- The position of the mail button icon. 
+					     -- The button is returned so you can modify the button if needed
+{0,5000,50000, "https://www.genericexampleurl.com/somemoregenericiness"} -- The button info.
+					-- If 0: Will not attach any gold, and will say 'Send Note'
+					-- If non zero: Will auto attach that amount of gold
+					-- If URL: Will show a dialog box and ask the user if they want to go to the URL.
+					-- Can theoretically do any number of options, it *should* handle them
+"If you found a bug, have a request or a suggestion, or simply wish to donate, send a mail." 
+					-- The above will be displayed as a message below the title.
+)
+
+]]
+
 
 
 local libLoaded
@@ -62,7 +84,7 @@ local function createFeedbackWindow(owningWindow)
 	b:SetMouseOverTexture("/esoui/art/hud/radialicon_cancel_over.dds")
 	b:SetHandler("OnClicked", function(self) self:GetParent():SetHidden(true) end )
 	local n = WINDOW_MANAGER:CreateControl(c:GetName().."Note", c, CT_LABEL)
-	n:SetText("If you found a bug, have a request or a suggestion, or simply wish to donate, send a mail.")
+	n:SetText(messageText)
 	n:SetDimensions(525, 200)
 	n:SetAnchor(TOPLEFT, c, TOPLEFT, 10, 50)
 	n:SetColor(1, 1, 1)
@@ -71,8 +93,8 @@ local function createFeedbackWindow(owningWindow)
 	return feedbackWindow
 end
 
-function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonName, parentControl, mailDestination,  mailButtonPosition, buttonInfo)
-	local feedbackWindow = createFeedbackWindow(parentControl)
+function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonName, parentControl, mailDestination,  mailButtonPosition, buttonInfo,  messageText)
+	local feedbackWindow = createFeedbackWindow(parentControl, messageText)
 
 	parentAddonNameSpace.feedbackWindow = feedbackWindow
 	feedbackWindow.parentControl = parentControl
