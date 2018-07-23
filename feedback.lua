@@ -25,7 +25,7 @@ LibFeedback:initializeFeedbackWindow(ExampleAddonNameSpace, -- namespace of the 
 
 
 local libLoaded
-local LIB_NAME, VERSION = "LibFeedback", 0.1
+local LIB_NAME, VERSION = "LibFeedback", 1.0
 local LibFeedback, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibFeedback then return end
 
@@ -105,7 +105,7 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
 	feedbackWindow:SetAnchor(TOPLEFT,parentControl, TOPLEFT, 0,0)
 	feedbackWindow:SetHidden(true)
 
-	feedbackWindow:SetDimensions(#buttonInfo*150 , 150)
+	feedbackWindow:SetDimensions(math.max(#buttonInfo*150, 600) , 150)
 	feedbackWindow:GetNamedChild("Label"):SetText(parentAddonName)
 
 	local buttons = {}
