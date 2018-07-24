@@ -45,17 +45,19 @@ parentControl, -- The parent control to anchor the feedback button(s) + label(s)
 
 
 local libLoaded
-local LIB_NAME, VERSION = "LibFeedback", 1.0
+local LIB_NAME, VERSION = "LibFeedback", 1.1
 local LibFeedback, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibFeedback then return end
 LibFeedback.debug = false
 
 local function SendNote(self)
+
 	local p = self.parent
 	if type(self.amount)=="string" then
 		RequestOpenUnsafeURL(self.amount)
 	else
 		p.parentControl:SetHidden(true)
+		p:SetHidden(true)
 		SCENE_MANAGER:Show('mailSend')
 		zo_callLater(function()
 			ZO_MailSendToField:SetText(p.mailDestination)
@@ -125,6 +127,7 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
 		d("|cFF0000[LibFeedback] - ERROR:|r Parent control not found for addon namespace: \"|cFFFFFF" .. tostring(parentAddonName) .. "|r\"")
 		return nil
 	end
+
 	if mailButtonPosition == nil or mailButtonPosition[2] == nil then
 		d("|cFF0000[LibFeedback] - ERROR:|r Mail button data is missing for addon namespace: \"|cFFFFFF" .. tostring(parentAddonName) .. "|r\"")
 		return nil
@@ -138,22 +141,22 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
 	parentAddonNameSpace.feedbackWindow = feedbackWindow
 	feedbackWindow.parentControl = parentControl
 	if type(mailDestination) == "table" then
-	--Get the current server and get the email address from the appropriate index of mailDestination[] then
-	--1: EU, 2: NA, 3: PTS
-	local mailAtServer = ""
-	local world = GetWorldName()
-	if world == 'PTS' then
-	    mailAtServer = mailDestination[3] or mailDestination[1] or mailDestination[2]
-	elseif world == 'EU Megaserver' then
-	    mailAtServer = mailDestination[1]
-	else
-	    mailAtServer = mailDestination[2]
-	end
-	-- No destination sepcified for this server, so exit.
-	if not mailAtServer then
-		return
-	end
-	feedbackWindow.mailDestination = mailAtServer
+		--Get the current server and get the email address from the appropriate index of mailDestination[] then
+		--1: EU, 2: NA, 3: PTS
+		local mailAtServer = ""
+		local world = GetWorldName()
+		if world == 'PTS' then
+		    mailAtServer = mailDestination[3] or mailDestination[1] or mailDestination[2]
+		elseif world == 'EU Megaserver' then
+		    mailAtServer = mailDestination[1]
+		else
+		    mailAtServer = mailDestination[2]
+		end
+		-- No destination sepcified for this server, so exit.
+		if not mailAtServer then
+			return
+		end
+		feedbackWindow.mailDestination = mailAtServer
     else
 	    feedbackWindow.mailDestination = mailDestination
     end
