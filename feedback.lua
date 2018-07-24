@@ -36,10 +36,10 @@ parentControl, -- The parent control to anchor the feedback button(s) + label(s)
                 -- [3rd parameter]Boolean send gold. True: Send mail with attached gold value from 1st parameter/False: Send normal mail without gold attached
 
 "If you found a bug, have a request or a suggestion, or simply wish to donate, send a mail.", -- Will be displayed as a message below the title.
-600, -- The width of the feedback window
-150  -- The heiht of the feedback window
-150, -- The width of the feedback window's buttons
-28   -- The height of the feedback window's buttons
+600, -- The default width of the feedback window. If more than 4 buttons this should be increased.
+150  -- The default height of the feedback window
+150, -- The default width of the feedback window's buttons
+28   -- The default height of the feedback window's buttons
 )
 ]]
 
@@ -116,6 +116,7 @@ local function createFeedbackWindow(owningWindow, messageText, feedbackWindowWid
 end
 
 function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonName, parentControl, mailDestination,  mailButtonPosition, buttonInfo,  messageText, feedbackWindowWidth, feedbackWindowHeight, feedbackWindowButtonWidth, feedbackWindowButtonHeight)
+	-- Create Default settings
 	if parentAddonNameSpace == nil or parentAddonNameSpace == "" then
 		d("|cFF0000[LibFeedback] - ERROR:|r Obligatory addon namespace is missing!")
 		return nil
@@ -137,18 +138,22 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
 	parentAddonNameSpace.feedbackWindow = feedbackWindow
 	feedbackWindow.parentControl = parentControl
 	if type(mailDestination) == "table" then
-        --Get the current server and get the email address from the appropriate index of mailDestination[] then
-        --1: EU, 2: NA, 3: PTS
-        local mailAtServer = ""
-        local world = GetWorldName()
-        if world == 'PTS' then
-            mailAtServer = mailDestination[3]
-        elseif world == 'EU Megaserver' then
-            mailAtServer = mailDestination[1]
-        else
-            mailAtServer = mailDestination[2]
-        end
-        feedbackWindow.mailDestination = mailAtServer
+	--Get the current server and get the email address from the appropriate index of mailDestination[] then
+	--1: EU, 2: NA, 3: PTS
+	local mailAtServer = ""
+	local world = GetWorldName()
+	if world == 'PTS' then
+	    mailAtServer = mailDestination[3] or mailDestination[1] or mailDestination[2]
+	elseif world == 'EU Megaserver' then
+	    mailAtServer = mailDestination[1]
+	else
+	    mailAtServer = mailDestination[2]
+	end
+	-- No destination sepcified for this server, so exit.
+	if not mailAtServer then
+		return
+	end
+	feedbackWindow.mailDestination = mailAtServer
     else
 	    feedbackWindow.mailDestination = mailDestination
     end
