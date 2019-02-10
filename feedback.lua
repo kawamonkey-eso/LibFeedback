@@ -36,7 +36,7 @@ parentControl, -- The parent control to anchor the feedback button(s) + label(s)
                 -- [3rd parameter]Boolean send gold. True: Send mail with attached gold value from 1st parameter/False: Send normal mail without gold attached
 
 "If you found a bug, have a request or a suggestion, or simply wish to donate, send a mail.", -- Will be displayed as a message below the title.
-600, -- The default width of the feedback window. If more than 4 buttons this should be increased.
+600, -- The default width of the feedback window. If more than 4 buttons this will be automatically increased.
 150  -- The default height of the feedback window
 150, -- The default width of the feedback window's buttons
 28   -- The default height of the feedback window's buttons
@@ -45,7 +45,7 @@ parentControl, -- The parent control to anchor the feedback button(s) + label(s)
 
 
 local libLoaded
-local LIB_NAME, VERSION = "LibFeedback", 1.1
+local LIB_NAME, VERSION = "LibFeedback", 1.2
 local LibFeedback, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibFeedback then return end
 LibFeedback.debug = false
