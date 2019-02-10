@@ -170,7 +170,6 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
 
 	feedbackWindow:SetDimensions(math.max(#buttonInfo*feedbackWindowHeight, feedbackWindowWidth) , feedbackWindowHeight)
 	feedbackWindow:GetNamedChild("Label"):SetText(parentAddonName)
-	feedbackWindow:SetHidden(false)
 	local buttons = {}
 	for i = 1, #buttonInfo do
 
