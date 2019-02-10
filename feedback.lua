@@ -97,7 +97,7 @@ local function createFeedbackWindow(owningWindow, messageText, feedbackWindowWid
 	WINDOW_MANAGER:CreateControlFromVirtual(c:GetName().."BG", c, "ZO_DefaultBackdrop"):SetAnchorFill(c)
 	local l = WINDOW_MANAGER:CreateControl(c:GetName().."Label", c, CT_LABEL)
 	l:SetFont("ZoFontGame")
-	l:SetAnchor(TOP, c,TOP0, 0, 5)
+	l:SetAnchor(TOP, c,TOP, 0, 5)
 	l:SetHorizontalAlignment(TEXT_ALIGN_CENTER)
 	l:SetColor(0.83, 0.76, 0.16)
 	local b = WINDOW_MANAGER:CreateControl(c:GetName().."Close", c, CT_BUTTON)
@@ -134,8 +134,11 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
 	end
     feedbackWindowHeight = feedbackWindowHeight or 150
     feedbackWindowWidth = feedbackWindowWidth or 600
+
     feedbackWindowButtonWidth = feedbackWindowButtonWidth or 150
     feedbackWindowButtonHeight = feedbackWindowButtonHeight or 28
+
+    feedbackWindowWidth = math.max(#buttonInfo*feedbackWindowButtonWidth +30, feedbackWindowWidth)
 
 	local feedbackWindow = createFeedbackWindow(parentControl, messageText, feedbackWindowWidth, feedbackWindowHeight)
 	parentAddonNameSpace.feedbackWindow = feedbackWindow
@@ -167,12 +170,12 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
 
 	feedbackWindow:SetDimensions(math.max(#buttonInfo*feedbackWindowHeight, feedbackWindowWidth) , feedbackWindowHeight)
 	feedbackWindow:GetNamedChild("Label"):SetText(parentAddonName)
-
+	feedbackWindow:SetHidden(false)
 	local buttons = {}
 	for i = 1, #buttonInfo do
 
 		buttons[#buttons+1] =  createFeedbackButton(feedbackWindow:GetName().."Button"..#buttons, feedbackWindow, feedbackWindowButtonWidth, feedbackWindowButtonHeight)
-		buttons[i]:SetAnchor(BOTTOM, feedbackWindow, BOTTOMLEFT, (i-1)*feedbackWindowWidth+70,-10)
+		buttons[i]:SetAnchor(BOTTOM, feedbackWindow, BOTTOMLEFT, (i-1)*feedbackWindowWidth/#buttonInfo+70,-10)
         local buttonData = buttonInfo[i]
         if buttonData ~= nil then
             local amount
@@ -235,12 +238,19 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
             buttons[i]:SetText(buttonText)
         end
 	end
+	-- Deal with low numbers of buttons horribly
+	if #buttons == 2 then
+		buttons[1]:SetAnchor(BOTTOM, feedbackWindow, BOTTOM, feedbackWindowWidth/5,-10)
+		buttons[2]:SetAnchor(BOTTOM, feedbackWindow, BOTTOM, -feedbackWindowWidth/5,-10)
+	elseif #buttons == 1 then
+		buttons[1]:SetAnchor(BOTTOM, feedbackWindow, BOTTOM, 0,-10)
+	end
 	local showButton = createShowFeedbackWindow(parentControl)
 
 	showButton.feedbackWindow = feedbackWindow
 	showButton:SetAnchor(unpack(mailButtonPosition))
 	showButton:SetDimensions(40,40)
-	showButton.feedbackWindow.ToggleHidden = function(self) self:SetHidden(not self:IsHidden()) end
+	showButton.ToggleWindow = function(self) self.feedbackWindow:ToggleHidden() end
 
 	return showButton, feedbackWindow
 end
