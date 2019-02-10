@@ -45,7 +45,7 @@ parentControl, -- The parent control to anchor the feedback button(s) + label(s)
 
 
 local libLoaded
-local LIB_NAME, VERSION = "LibFeedback", 1.2
+local LIB_NAME, VERSION = "LibFeedback", 1.21
 local LibFeedback, oldminor = LibStub:NewLibrary(LIB_NAME, VERSION)
 if not LibFeedback then return end
 LibFeedback.debug = false
@@ -166,15 +166,15 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
 	feedbackWindow.parentAddonName = parentAddonName
 
 	feedbackWindow:SetAnchor(TOPLEFT,parentControl, TOPLEFT, 0,0)
-	feedbackWindow:SetHidden(true)
+	feedbackWindow:SetHidden(GetDisplayName()~="@Dolgubon")
 
-	feedbackWindow:SetDimensions(math.max(#buttonInfo*feedbackWindowHeight, feedbackWindowWidth) , feedbackWindowHeight)
+	feedbackWindow:SetDimensions(feedbackWindowWidth, feedbackWindowHeight)
 	feedbackWindow:GetNamedChild("Label"):SetText(parentAddonName)
 	local buttons = {}
 	for i = 1, #buttonInfo do
 
 		buttons[#buttons+1] =  createFeedbackButton(feedbackWindow:GetName().."Button"..#buttons, feedbackWindow, feedbackWindowButtonWidth, feedbackWindowButtonHeight)
-		buttons[i]:SetAnchor(BOTTOM, feedbackWindow, BOTTOMLEFT, (i-1)*feedbackWindowWidth/#buttonInfo+70,-10)
+		buttons[i]:SetAnchor(BOTTOMLEFT, feedbackWindow, BOTTOMLEFT, (i-1)*feedbackWindowWidth/#buttonInfo+5,-10)
         local buttonData = buttonInfo[i]
         if buttonData ~= nil then
             local amount
