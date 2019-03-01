@@ -166,7 +166,7 @@ function LibFeedback:initializeFeedbackWindow(parentAddonNameSpace, parentAddonN
 	feedbackWindow.parentAddonName = parentAddonName
 
 	feedbackWindow:SetAnchor(TOPLEFT,parentControl, TOPLEFT, 0,0)
-	feedbackWindow:SetHidden(GetDisplayName()~="@Dolgubon")
+	feedbackWindow:SetHidden(true)
 
 	feedbackWindow:SetDimensions(feedbackWindowWidth, feedbackWindowHeight)
 	feedbackWindow:GetNamedChild("Label"):SetText(parentAddonName)
